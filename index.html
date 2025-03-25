@@ -1,21 +1,42 @@
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR 방문 추적</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR 방문 추적</title>
 
-    <!-- Google Analytics 코드 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FH8CMN573Q"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-FH8CMN573Q'); // Google Analytics ID
-    </script>
+  <!-- Google Analytics 코드 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FH8CMN573Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
 
+    // URL에서 UTM 파라미터 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmSource = urlParams.get('utm_source') || 'unknown';
+    const utmMedium = urlParams.get('utm_medium') || 'unknown';
+    const utmCampaign = urlParams.get('utm_campaign') || 'unknown';
+
+    // Google Analytics로 전송
+    gtag('config', 'G-FH8CMN573Q', {
+      'page_title': `SPOT - ${utmCampaign}`,
+      'page_path': window.location.pathname + window.location.search,
+      'custom_map': {'dimension1': 'utm_source', 'dimension2': 'utm_medium', 'dimension3': 'utm_campaign'},
+      'utm_source': utmSource,
+      'utm_medium': utmMedium,
+      'utm_campaign': utmCampaign
+    });
+  </script>
 </head>
 <body>
-    <h1>SPOT1 방문</h1>
-    <p>이 페이지에 접속한 시간이 Google Analytics에 기록됩니다.</p>
+  <h1>SPOT 방문 추적</h1>
+  <p>현재 스팟 이름: <strong id="spot-name">알 수 없음</strong></p>
+  <p>이 페이지에 접속한 시간이 Google Analytics에 기록됩니다.</p>
+
+  <script>
+    // UTM 캠페인 값을 화면에 표시
+    document.getElementById('spot-name').innerText = utmCampaign !== 'unknown' ? utmCampaign : '정보 없음';
+  </script>
 </body>
 </html>
